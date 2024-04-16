@@ -9,10 +9,30 @@ window.addEventListener('load', function() {
     class InputHandler {
         constructor(){ //keep track of key presses
             this.keys = []
-            window.addEventListener('keydown', function(e){
+            //es6 arrow function don't bind this, but inherit from parent scope, called lexical scoping
+            //using arrow function so it doesn't 'forget' what e stands for, grabbing the event of the key press
+            window.addEventListener('keydown', e => {
                 console.log(e.key)
-                if(e.key === 'ArrowDown'){
+                if(( e.key === 'ArrowDown' || 
+                    e.key === 'ArrowUp' || 
+                    e.key === 'ArrowLeft' || 
+                    e.key === 'ArrowRight')
+                    //grabbing key data and adding to list, only if it isn't already there
+                && this.keys.push(e.key) === -1){
                     this.keys.push(e.key)
+                }
+                console.log(e.key, this.keys)
+            })
+
+            window.addEventListener('keyup', e => {
+                console.log(e.key)
+                if(( e.key === 'ArrowDown' ||
+                    e.key === 'ArrowUp' || 
+                    e.key === 'ArrowLeft' || 
+                    e.key === 'ArrowRight')
+                ){
+                    //find and remove key pressed from array
+                    this.keys.splice(this.keys.indexOf(e.key), 1)
                 }
                 console.log(e.key, this.keys)
             })
