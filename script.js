@@ -55,7 +55,7 @@ window.addEventListener('load', function() {
             this.frameY = 0
             this.speed = 0
             this.vy = 0
-            this.weight = 0 //need an opposing force or when you jump with player, it flies off the screen
+            this.weight = 1 //need an opposing force or when you jump with player, it flies off the screen
         }
         draw(context){
             context.fillStyle = 'white'
@@ -70,8 +70,8 @@ window.addEventListener('load', function() {
                 this.speed = 5
             } else if(input.keys.indexOf('ArrowLeft') > -1){
                 this.speed = -5
-            } else if(input.keys.indexOf('ArrowUp') > -1){
-                this.vy -= 30
+            } else if(input.keys.indexOf('ArrowUp') > -1 && this.onGround()){
+                this.vy -= 32 //tracking velocity of jump, constantly changing with each jump, adding the weight onto the character
             } else {
                 this.speed = 0
             }
@@ -84,7 +84,12 @@ window.addEventListener('load', function() {
             this.y += this.vy //need a way to check if player is in air or on ground, make a helper function called onGround()
             if (!this.onGround()){
                 this.vy += this.weight
+                this.frameY = 1
+            } else {
+                this.vy = 0
+                this.frameY = 0
             }
+            if (this.y > this.gameHeight - this.height) this.y = this.gameHeight - this.height //prevents player from going through the floor partially on big jumps
         }
         onGround(){
             return this.y >= this.gameHeight - this.height
@@ -94,8 +99,19 @@ window.addEventListener('load', function() {
 
 
     class Background {
-
-
+        constructor(gameWidth, gameHeight){
+            //convert this to class variables
+            this.gameWidth = gameWidth
+            this.gameHeight = gameHeight
+            this.image = document.getElementById('backgroundImage')
+            this.x = 0
+            this.y = 0
+            this.width = 2400
+            this.height = 720
+        }
+        draw(context){
+            context.drawImage(this.image, this.x, this.y)
+        }
     }
 
 
@@ -121,11 +137,14 @@ window.addEventListener('load', function() {
 
     const input = new InputHandler()
     const player = new Player(canvas.width, canvas.height) //instance of player class
+    const background = new Background(canvas.width, canvas.height)
 
     function animate() {
         ctx.clearRect(0,0, canvas.width, canvas.height)//this removes the part left behind with player.draw(ctx)
+        background.draw(ctx) //the background must come before player since it is only one canvas, so the player can lay on top of the background
         player.draw(ctx) //this creates a moving player but keeps the painted parts behind
         player.update(input)
+        
         requestAnimationFrame(animate)//make endless animation loop by calling parent function
     }
     animate()
