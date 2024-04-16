@@ -56,6 +56,7 @@ window.addEventListener('load', function() {
             this.speed = 0
             this.vy = 0
             this.weight = 1 //need an opposing force or when you jump with player, it flies off the screen
+        
         }
         draw(context){
             context.fillStyle = 'white'
@@ -108,9 +109,15 @@ window.addEventListener('load', function() {
             this.y = 0
             this.width = 2400
             this.height = 720
+            this.speed = 7
         }
         draw(context){
-            context.drawImage(this.image, this.x, this.y)
+            context.drawImage(this.image, this.x, this.y, this.width, this.height)
+            context.drawImage(this.image, this.x + this.width - this.speed, this.y, this.width, this.height) //by adding another drawImage, create single endless scene, this is an illusion, we are only filling in the gap where it ends with the next image
+        }
+        update(){
+            this.x -= this.speed
+            if (this.x < 0 - this.width) this.x = 0 //if we get to end of backgound, reset back to 0, in order to keep looping scene
         }
     }
 
@@ -142,6 +149,7 @@ window.addEventListener('load', function() {
     function animate() {
         ctx.clearRect(0,0, canvas.width, canvas.height)//this removes the part left behind with player.draw(ctx)
         background.draw(ctx) //the background must come before player since it is only one canvas, so the player can lay on top of the background
+        background.update()
         player.draw(ctx) //this creates a moving player but keeps the painted parts behind
         player.update(input)
         
