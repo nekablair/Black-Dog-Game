@@ -51,14 +51,31 @@ window.addEventListener('load', function() {
             this.x = 0 //start at zero
             this.y = this.gameHeight - this.height //start at zero, then once you can see square, move to bottom of screen
             this.image = document.getElementById('playerImage')
+            this.frameX = 0
+            this.frameY = 0
+            this.speed = 0
         }
         draw(context){
             context.fillStyle = 'white'
             context.fillRect(this.x, this.y, this.width, this.height)
-            context.drawImage(this.image, sx, sy, sw, sh, this.x, this.y, this.width, this.height)//with 0,0 gives entire png, must give it coordinates for where you want the player to be in the canvas, sx,sy,sw, sh cropping out sprite
+            context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)//with 0,0 gives entire png, must give it coordinates for where you want the player to be in the canvas, sx,sy,sw, sh cropping out sprite
         }
-        update(){
-            this.x++//everytime call is made, moves player
+        update(input){
+            // this.x++//everytime call is made, moves player
+            //horizontal movement
+            this.x += this.speed
+            if (input.keys.indexOf('ArrowRight') > -1){
+                this.speed = 5
+            } else if(input.keys.indexOf('ArrowLeft') > -1){
+                this.speed = -5
+            } else {
+                this.speed = 0
+            }
+
+            if (this.x < 0) this.x = 0//stop player from going off screen to left
+            //vertical movement
+            // this.y += this.
+            else if(this.x > this.gameWidth - this.width) this.x = this.gameWidth - this.width//stop player from going off screen to right
         }
     }
 
@@ -96,7 +113,7 @@ window.addEventListener('load', function() {
     function animate() {
         ctx.clearRect(0,0, canvas.width, canvas.height)//this removes the part left behind with player.draw(ctx)
         player.draw(ctx) //this creates a moving player but keeps the painted parts behind
-        player.update()
+        player.update(input)
         requestAnimationFrame(animate)//make endless animation loop by calling parent function
     }
     animate()
