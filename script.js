@@ -55,7 +55,7 @@ window.addEventListener('load', function() {
         draw(context){
             context.fillStyle = 'white'
             context.fillRect(this.x, this.y, this.width, this.height)
-            context.drawImage(this.image, 0, 0)//with 0,0 gives entire png, must give it coordinates for where you want the player to be in the canvas
+            context.drawImage(this.image, sx, sy, sw, sh, this.x, this.y, this.width, this.height)//with 0,0 gives entire png, must give it coordinates for where you want the player to be in the canvas, sx,sy,sw, sh cropping out sprite
         }
         update(){
             this.x++//everytime call is made, moves player
