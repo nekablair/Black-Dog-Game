@@ -43,8 +43,23 @@ window.addEventListener('load', function() {
 
 
     class Player {
-
-
+        constructor(gameWidth, gameHeight) {
+            this.gameWidth = gameWidth
+            this.gameHeight = gameHeight
+            this.width = 200
+            this.height = 200
+            this.x = 0 //start at zero
+            this.y = this.gameHeight - this.height //start at zero, then once you can see square, move to bottom of screen
+            this.image = document.getElementById('playerImage')
+        }
+        draw(context){
+            context.fillStyle = 'white'
+            context.fillRect(this.x, this.y, this.width, this.height)
+            context.drawImage(this.image, 0, 0)//with 0,0 gives entire png, must give it coordinates for where you want the player to be in the canvas
+        }
+        update(){
+            this.x++//everytime call is made, moves player
+        }
     }
 
 
@@ -76,11 +91,13 @@ window.addEventListener('load', function() {
     }
 
     const input = new InputHandler()
-
-
+    const player = new Player(canvas.width, canvas.height) //instance of player class
 
     function animate() {
-
-
+        ctx.clearRect(0,0, canvas.width, canvas.height)//this removes the part left behind with player.draw(ctx)
+        player.draw(ctx) //this creates a moving player but keeps the painted parts behind
+        player.update()
+        requestAnimationFrame(animate)//make endless animation loop by calling parent function
     }
+    animate()
 })
