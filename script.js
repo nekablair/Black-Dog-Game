@@ -124,7 +124,21 @@ window.addEventListener('load', function() {
 
 
     class Enemy {
-
+        constructor(gameWidth, gameHeight){
+            this.gameWidth = gameWidth
+            this.gameHeight = gameHeight
+            this.width = 160 //use the actual size of the asset
+            this.height = 119
+            this.image = document.getElementById("enemyImage")
+            this.x = 0
+            this.y = 0
+            this.frameX = 0
+            this.frameY = 0
+        }
+        draw(context){
+            //since there is only one row on enemy png, we don't need to times the zero by this.height, so we just keep the zero
+            context.drawImage(this.image, 0 * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height)
+        }
 
     }
 
@@ -142,9 +156,13 @@ window.addEventListener('load', function() {
 
     }
 
+    //creating instances
     const input = new InputHandler()
     const player = new Player(canvas.width, canvas.height) //instance of player class
     const background = new Background(canvas.width, canvas.height)
+    const enemy1 = new Enemy(canvas.width, canvas.height)
+
+
 
     function animate() {
         ctx.clearRect(0,0, canvas.width, canvas.height)//this removes the part left behind with player.draw(ctx)
@@ -152,6 +170,7 @@ window.addEventListener('load', function() {
         background.update()
         player.draw(ctx) //this creates a moving player but keeps the painted parts behind
         player.update(input)
+        enemy1.draw(ctx)
         
         requestAnimationFrame(animate)//make endless animation loop by calling parent function
     }
