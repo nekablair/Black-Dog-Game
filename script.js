@@ -5,6 +5,7 @@ window.addEventListener('load', function() {
     const ctx = canvas.getContext('2d') //2d api with drawing methods/properties
     canvas.width = 800
     canvas.height = 720
+    let enemies = []
 
     class InputHandler {
         constructor(){ //keep track of key presses
@@ -130,14 +131,17 @@ window.addEventListener('load', function() {
             this.width = 160 //use the actual size of the asset
             this.height = 119
             this.image = document.getElementById("enemyImage")
-            this.x = 0
-            this.y = 0
+            this.x = this.gameWidth
+            this.y = this.gameHeight - this.height
             this.frameX = 0
             this.frameY = 0
         }
         draw(context){
             //since there is only one row on enemy png, we don't need to times the zero by this.height, so we just keep the zero
-            context.drawImage(this.image, 0 * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height)
+            context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height)
+        }
+        update(){
+            this.x-- //move enemy to the left
         }
 
     }
@@ -171,6 +175,7 @@ window.addEventListener('load', function() {
         player.draw(ctx) //this creates a moving player but keeps the painted parts behind
         player.update(input)
         enemy1.draw(ctx)
+        enemy1.update()
         
         requestAnimationFrame(animate)//make endless animation loop by calling parent function
     }
