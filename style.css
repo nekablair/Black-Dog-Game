@@ -1,0 +1,16 @@
+body {
+    background: black;
+}
+
+#canvas1 {
+    /* background: blue; added blue to see it when setting up, remove so it becomes transparent to build out and play game*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid white;
+}
+
+#playerImage, #backgroundImage, #enemyImage {
+    display: none;
+}
