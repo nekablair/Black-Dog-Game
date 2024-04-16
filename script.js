@@ -54,6 +54,8 @@ window.addEventListener('load', function() {
             this.frameX = 0
             this.frameY = 0
             this.speed = 0
+            this.vy = 0
+            this.weight = 0 //need an opposing force or when you jump with player, it flies off the screen
         }
         draw(context){
             context.fillStyle = 'white'
@@ -68,14 +70,24 @@ window.addEventListener('load', function() {
                 this.speed = 5
             } else if(input.keys.indexOf('ArrowLeft') > -1){
                 this.speed = -5
+            } else if(input.keys.indexOf('ArrowUp') > -1){
+                this.vy -= 30
             } else {
                 this.speed = 0
             }
 
             if (this.x < 0) this.x = 0//stop player from going off screen to left
-            //vertical movement
             // this.y += this.
             else if(this.x > this.gameWidth - this.width) this.x = this.gameWidth - this.width//stop player from going off screen to right
+
+            //vertical movement
+            this.y += this.vy //need a way to check if player is in air or on ground, make a helper function called onGround()
+            if (!this.onGround()){
+                this.vy += this.weight
+            }
+        }
+        onGround(){
+            return this.y >= this.gameHeight - this.height
         }
     }
 
